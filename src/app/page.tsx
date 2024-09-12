@@ -1,101 +1,265 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from 'recharts';
+interface User {
+  name: string;
+  id: string;
+}
+
+interface ChallengeDay {
+  name: string;
+  dailyGoal: number;
+  day: number;
+}
+interface Challenge {
+  name: string;
+  id: string;
+  days: ChallengeDay[];
+  createdAt: Date;
+  createdby: User;
+  dailyGoal: number;
+  participants: User[];
+}
+const AllChallenges: Challenge[] = [
+  {
+    createdAt: new Date(),
+    createdby: { name: 'John Doe', id: '1' },
+    days: [],
+    id: '1',
+    name: 'Push-Up Challenge',
+    dailyGoal: 100,
+    participants: [],
+  },
+];
+
+export default function TableViewPushUpTracker() {
+  // const [challenges, setData] = useState(AllChallenges);
+  // const [users, setUsers] = useState(All);
+  // const [newUser, setNewUser] = useState('');
+  // const [selectedUser, setSelectedUser] = useState('');
+  // const [pushUps, setPushUps] = useState('');
+  // const [dailyGoal, setDailyGoal] = useState(100);
+
+  // const handleJoinChallenge = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (newUser && !users.includes(newUser)) {
+  //     setUsers([...users, newUser]);
+  //     setNewUser('');
+  //   }
+  // };
+
+  // const handleLogPushUps = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const pushUpsCount = parseInt(pushUps);
+  //   if (isNaN(pushUpsCount) || !selectedUser) return;
+
+  //   const newData = [...challenges];
+  //   const lastDay = newData[newData.length - 1];
+  //   const newDay = { ...lastDay, name: `Day ${newData.length + 1}` };
+  //   newDay[selectedUser] = (newDay[selectedUser] || 0) + pushUpsCount;
+  //   newData.push(newDay);
+
+  //   setData(newData);
+  //   setPushUps('');
+  // };
+
+  // const getCurrentPushUps = (userName: string) => {
+  //   return challenges[challenges.length - 1][userName] || 0;
+  // };
+
+  // const getGoalDifference = (userName: string) => {
+  //   const current = getCurrentPushUps(userName);
+  //   return dailyGoal - current;
+  // };
+
+  // const getCompletionPercentage = (userName: string) => {
+  //   const current = getCurrentPushUps(userName);
+  //   return Math.min(Math.round((current / dailyGoal) * 100), 100);
+  // };
+
+  // const updatePushUps = (data) => {
+  //   if (!userName) return;
+  //   // open prompt to enter pushups
+  //   const update = prompt('Enter the number of pushups');
+  //   if (!update) return;
+  //   const newData = [...data];
+  // };
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className='container mx-auto p-4 space-y-6'>
+      <h1 className='text-3xl font-bold mb-6'>Push-Up Challenge Tracker</h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+      {/* <Card className='mb-6'>
+        <CardHeader>
+          <CardTitle className='flex justify-between items-center'>
+            <span>Daily Challenge Goal</span>
+            <span className='text-2xl font-bold'>{dailyGoal} Push-Ups</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='flex items-center space-x-4'>
+            <Input
+              type='number'
+              value={dailyGoal}
+              onChange={(e) => setDailyGoal(parseInt(e.target.value) || 0)}
+              className='w-24'
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+            <Button onClick={() => setDailyGoal(dailyGoal)}>Update Goal</Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className='mb-6'>
+        <CardHeader>
+          <CardTitle>Current Participants</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='overflow-x-auto'>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Current</TableHead>
+                  <TableHead>Remaining</TableHead>
+                  <TableHead>Progress</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user}>
+                    <TableCell className='font-medium'>{user}</TableCell>
+                    <TableCell>{getCurrentPushUps(user)}</TableCell>
+                    <TableCell>
+                      {Math.max(0, getGoalDifference(user))}
+                    </TableCell>
+                    <TableCell>
+                      <div className='flex items-center space-x-2'>
+                        <Progress
+                          value={getCompletionPercentage(user)}
+                          className='w-full'
+                        />
+                        <span className='text-sm font-medium'>
+                          {getCompletionPercentage(user)}%
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        <Card>
+          <CardHeader>
+            <CardTitle>Join the Challenge</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleJoinChallenge} className='space-y-4'>
+              <div>
+                <Label htmlFor='new-user'>Your Name</Label>
+                <Input
+                  id='new-user'
+                  value={newUser}
+                  onChange={(e) => setNewUser(e.target.value)}
+                  placeholder='Enter your name'
+                />
+              </div>
+              <Button type='submit'>Join Challenge</Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Log Your Push-Ups</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleLogPushUps} className='space-y-4'>
+              <div>
+                <Label htmlFor='user-select'>Select Your Name</Label>
+                <select
+                  id='user-select'
+                  className='w-full p-2 border rounded'
+                  value={selectedUser}
+                  onChange={(e) => setSelectedUser(e.target.value)}
+                >
+                  <option value=''>Select your name</option>
+                  {users.map((user) => (
+                    <option key={user} value={user}>
+                      {user}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <Label htmlFor='push-ups'>Number of Push-Ups</Label>
+                <Input
+                  id='push-ups'
+                  type='number'
+                  value={pushUps}
+                  onChange={(e) => setPushUps(e.target.value)}
+                  placeholder='Enter number of push-ups'
+                />
+              </div>
+              <Button type='submit'>Log Push-Ups</Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Challenge Progress</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className='h-[400px]'>
+            <ResponsiveContainer width='100%' height='100%'>
+              <LineChart data={challenges}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='name' />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {users.map((user, index) => (
+                  <Line
+                    key={user}
+                    type='monotone'
+                    dataKey={user}
+                    stroke={`hsl(${(index * 360) / users.length}, 70%, 50%)`}
+                    strokeWidth={2}
+                  />
+                ))}
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card> */}
+      <h1>Working on it🚧</h1>
     </div>
   );
 }
